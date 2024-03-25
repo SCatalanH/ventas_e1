@@ -81,6 +81,29 @@ public class VentaController {
         return this.ventas;
     }
 
+    @GetMapping("/ventas-mensuales/{year}/{month}")
+    public double calcularTotalVentasMensuales(@PathVariable int year, @PathVariable int month) {
+        // Crear un objeto Calendar para el primer día del mes especificado
+        Calendar calInicioMes = Calendar.getInstance();
+        calInicioMes.set(year, month - 1, 1); // El mes en Calendar es 0-indexado, por lo que restamos 1
+    
+        // Crear un objeto Calendar para el último día del mes especificado
+        Calendar calFinMes = Calendar.getInstance();
+        calFinMes.set(year, month - 1, calFinMes.getActualMaximum(Calendar.DAY_OF_MONTH)); // Último día del mes
+    
+        // Sumar los montos de las ventas que ocurrieron en el mes especificado
+        double totalVentasMensuales = 0.0;
+        for (Venta venta : this.ventas) {
+            Calendar calVenta = Calendar.getInstance();
+            calVenta.setTime(venta.getFecha());
+            if (calVenta.after(calInicioMes) && calVenta.before(calFinMes)) {
+                totalVentasMensuales += venta.getMonto();
+            }
+        }
+        return totalVentasMensuales;
+    }
+    
+
     // Endpoint para calcular el promedio de ventas diarias
     @GetMapping("/ventas-diarias/{year}/{month}/{day}")
 public double calcularTotalVentasDiarias(@PathVariable int year, @PathVariable int month, @PathVariable int day) {
