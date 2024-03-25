@@ -12,7 +12,7 @@ public class Venta {
         this.monto = monto;
     }
 
-    // Getters y setters
+   
     public int getId() {
         return id;
     }
